@@ -12,4 +12,6 @@ path = "src/main.rs"
 
 [package.metadata]
 scripts = ["scripts/nix-install.sh"]
+description="A simple command line utility to quickly add packages to your configuration.nix using fuzzy search and rebuild all in one command :)"
+license="MIT"
 
