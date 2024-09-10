@@ -1,6 +1,6 @@
 [package]
 name = "nix-install"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 authors= ["Mateo Covacho <mateocovacho@gmail.com>"]
 description="A simple command line utility to quickly add packages to your configuration.nix using fuzzy search and rebuild all in one command :)"

@@ -9,6 +9,7 @@ $HOME/.cargo/bin/nix-install-bin $(fzf --bind "change:$src_cmd" \
                 echo 'unbind(change)+change-prompt(Filtering with fzf > )+enable-search'" \
                 | awk '{print $1}')
 
+sudo nixos-rebuild switch
 # echo "Installing $package"
 # cargo run $package 
   # --preview 'brew i  

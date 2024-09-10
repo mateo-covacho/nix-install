@@ -44,20 +44,20 @@ fn main() -> io::Result<()> {
 
     add_package(file_path, search_text, package.as_str())?;
 
-    match Command::new("sh")
-        .arg("-c")
-        .arg("nixos-rebuild switch")
-        .output()
-    {
-        Ok(output) => {
-            println!("status: {}", output.status);
-            println!("stdout: {}", str::from_utf8(&output.stdout).unwrap());
-            println!("stderr: {}", str::from_utf8(&output.stderr).unwrap());
-        }
-        Err(e) => {
-            println!("error: {}", e);
-        }
-    }
+    // match Command::new("sh")
+    //     .arg("-c")
+    //     .arg("sudo nixos-rebuild switch")
+    //     .output()
+    // {
+    //     Ok(output) => {
+    //         println!("status: {}", output.status);
+    //         println!("stdout: {}", str::from_utf8(&output.stdout).unwrap());
+    //         println!("stderr: {}", str::from_utf8(&output.stderr).unwrap());
+    //     }
+    //     Err(e) => {
+    //         println!("error: {}", e);
+    //     }
+    // }
 
     Ok(())
 }
