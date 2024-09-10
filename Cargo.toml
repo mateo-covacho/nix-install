@@ -2,5 +2,14 @@
 name = "nix-install"
 version = "0.1.0"
 edition = "2021"
+authors= ["Mateo Covacho <mateocovacho@gmail.com>"]
 
 [dependencies]
+
+[[bin]]
+name = "nix-install-bin"
+path = "src/main.rs"
+
+[package.metadata]
+scripts = ["scripts/nix-install.sh"]
+
