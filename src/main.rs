@@ -2,8 +2,7 @@ use std::env;
 use std::fs::{File, OpenOptions};
 use std::io::{self, BufRead, Write};
 use std::path::Path;
-use std::process::Command;
-use std::str;
+use std::{process::Command, str};
 
 fn add_package<P: AsRef<Path>>(file_path: P, search_text: &str, new_line: &str) -> io::Result<()> {
     // Open the file for reading
@@ -45,11 +44,20 @@ fn main() -> io::Result<()> {
 
     add_package(file_path, search_text, package.as_str())?;
 
-    Command::new("sh")
+    match Command::new("sh")
         .arg("-c")
         .arg("nixos-rebuild switch")
         .output()
-        .expect("failed to execute process");
+    {
+        Ok(output) => {
+            println!("status: {}", output.status);
+            println!("stdout: {}", str::from_utf8(&output.stdout).unwrap());
+            println!("stderr: {}", str::from_utf8(&output.stderr).unwrap());
+        }
+        Err(e) => {
+            println!("error: {}", e);
+        }
+    }
 
     Ok(())
 }
