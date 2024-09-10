@@ -3,6 +3,11 @@ name = "nix-install"
 version = "0.1.0"
 edition = "2021"
 authors= ["Mateo Covacho <mateocovacho@gmail.com>"]
+description="A simple command line utility to quickly add packages to your configuration.nix using fuzzy search and rebuild all in one command :)"
+license="MIT"
+homepage="https://github.com/mateo-covacho/nix-install"
+repository="https://github.com/mateo-covacho/nix-install"
+readme="README.md"
 
 [dependencies]
 
@@ -12,6 +17,4 @@ path = "src/main.rs"
 
 [package.metadata]
 scripts = ["scripts/nix-install.sh"]
-description="A simple command line utility to quickly add packages to your configuration.nix using fuzzy search and rebuild all in one command :)"
-license="MIT"
 
