@@ -12,6 +12,10 @@ Currently, you need to clone the repository and add the script that calls the Ru
 Add the script to your PATH, e.g., by linking it to /usr/local/bin
 
 # Usage
+add the comment line 
+"# add packages above"
+and nix-install will add packages above
+
 nix-install
 < Type in package name >
 # TODO
