@@ -1,6 +1,7 @@
 src_cmd="reload:nix-search {q}"
 default_prompt="Search nix.pkgs > "
-cargo run $(fzf --bind "change:$src_cmd" \
+
+cargo run $(# fzf --bind "change:$src_cmd" \
                 --bind "start:$src_cmd" \
                 --disabled \
                 --prompt "$default_prompt" \

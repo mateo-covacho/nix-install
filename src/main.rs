@@ -1,12 +1,11 @@
-use std::env;
 use std::fs::{File, OpenOptions};
 use std::io::{self, BufRead, Write};
-use std::path::Path;
+use std::process::Stdio;
 use std::{process::Command, str};
 
-fn add_package<P: AsRef<Path>>(file_path: P, search_text: &str, new_line: &str) -> io::Result<()> {
+fn add_package(file_path: &str, search_text: &str, new_line: &str) -> io::Result<()> {
     // Open the file for reading
-    let file = File::open(&file_path)?;
+    let file = File::open(file_path)?;
     let reader = io::BufReader::new(file);
 
     // Collect the lines and search for the one containing `search_text`
@@ -36,28 +35,43 @@ fn add_package<P: AsRef<Path>>(file_path: P, search_text: &str, new_line: &str) 
 }
 
 fn main() -> io::Result<()> {
-    let args: Vec<String> = env::args().collect();
     let file_path = "/etc/nixos/configuration.nix";
     let search_text = "add packages above";
+    let selected_package = match Command::new("sh")
+        .arg("-c")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::inherit())
+        .stdin(Stdio::inherit())
+        .arg(r#"
+        src_cmd="reload:nix-search {q}"
+        default_prompt="Search nix.pkgs > "
+        fzf --bind "change:$src_cmd" \
+                --bind "start:$src_cmd" \
+                --disabled \
+                --prompt "$default_prompt" \
+                --bind "ctrl-t:transform:[[ \$FZF_PROMPT != \"$default_prompt\" ]] &&
+                echo 'rebind(change)+change-prompt($default_prompt)+disable-search' ||
+                echo 'unbind(change)+change-prompt(Filtering with fzf > )+enable-search'" \
+                | awk '{print $1}' | tee /dev/stderr"#)
+        .spawn().unwrap().wait_with_output()
+    {
+        Ok(output) => {
+            str::from_utf8(&output.stdout).unwrap().trim().to_string()
+        }
+        Err(e) => {
+            println!("error: {}", e);
+            panic!("Un error");
+        }
+    };
 
-    let package = "\t\t".to_string() + &args[1];
+    add_package(file_path, search_text, &selected_package)?;
 
-    add_package(file_path, search_text, package.as_str())?;
-
-    // match Command::new("sh")
-    //     .arg("-c")
-    //     .arg("sudo nixos-rebuild switch")
-    //     .output()
-    // {
-    //     Ok(output) => {
-    //         println!("status: {}", output.status);
-    //         println!("stdout: {}", str::from_utf8(&output.stdout).unwrap());
-    //         println!("stderr: {}", str::from_utf8(&output.stderr).unwrap());
-    //     }
-    //     Err(e) => {
-    //         println!("error: {}", e);
-    //     }
-    // }
+    Command::new("sh")
+        .arg("-c")
+        .arg("sudo nixos-rebuild switch")
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .spawn().unwrap().wait().unwrap();
 
     Ok(())
 }
